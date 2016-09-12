@@ -44,7 +44,7 @@ module.exports.selectTeam = function (req, res) {
 			numDigits: 1,
 			timeout: 5
 		}, function (node) {
-			node.say('Press any key if you want a callback, if you want to talk to an agent please wait in the line')
+			node.say('Press any key if you want a callback, if you really want to talk to an agent please wait in the line')
 		})
 
 		/* create task attributes */
@@ -56,6 +56,8 @@ module.exports.selectTeam = function (req, res) {
 			type: 'Inbound call',
 			team: team.id
 		}
+
+		console.log('workflow sid', req.configuration.twilio);
 
 		twiml.enqueue({ workflowSid: req.configuration.twilio.workflowSid }, function (node) {
 			node.task(JSON.stringify(attributes), {

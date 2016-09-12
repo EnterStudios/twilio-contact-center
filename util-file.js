@@ -3,6 +3,9 @@ var pg    = require("pg");
 
 module.exports.generateSessionExirationDate = function (seconds) {
 
+  console.log('generatesessionexpirationdate');
+
+
   var now = new Date();
   var offset = (now.getTimezoneOffset() * 60 * 1000 ) * -1;
   var date = new Date(now.getTime() + offset + (seconds * 1000));
@@ -23,12 +26,13 @@ module.exports.getConfiguration = function (callback) {
       return callback(exception)
     }
 
-    return callback(null, configuration) 
+    return callback(null, configuration)
   });
-  
+
 }
 
 exports.setConfiguration = function (configuration, callback) {
+
 
   var configurationAsString =  JSON.stringify(configuration, null, 4);
 
@@ -38,5 +42,5 @@ exports.setConfiguration = function (configuration, callback) {
     } else {
       return callback(null);
     }
-  }); 
+  });
 }

@@ -11,20 +11,20 @@ if(process.env.DYNO){
 } else {
   util = require("./util-file.js")
 }
- 
-var app = express() 
+
+var app = express()
 
 app.set('port', (process.env.PORT || 5000))
 
 app.use(compression())
 app.use(sessions({resave: true, saveUninitialized: false, secret: 'keyboard cat', name: 'session',  cookie: {expires: util.generateSessionExirationDate() }}))
-app.use(bodyParser.json({})) 
+app.use(bodyParser.json({}))
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
 app.use(function (req, res, next) {
-  util.getConfiguration(function(error, configuration){
+    util.getConfiguration(function(error, configuration){
   	if(error){
   		res.status(500).json({stack: error.stack, message: error.message })
   	} else {
@@ -77,7 +77,7 @@ router.route('/workers/:id').delete(workers.delete)
 
 var dashboard = require('./controllers/dashboard.js')
 
-router.route('/dashboard/event-receiver').post(dashboard.pushEvent) 
+router.route('/dashboard/event-receiver').post(dashboard.pushEvent)
 
 app.use('/api', router)
 app.use('/', express.static(__dirname + '/public'))

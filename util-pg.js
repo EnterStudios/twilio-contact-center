@@ -3,6 +3,8 @@ var pg    = require("pg")
 
 module.exports.generateSessionExirationDate = function (seconds) {
 
+  console.log('generatesessionexpirationdate');
+
   var now = new Date()
   var offset = (now.getTimezoneOffset() * 60 * 1000 ) * -1
   var date = new Date(now.getTime() + offset + (seconds * 1000))
@@ -12,13 +14,15 @@ module.exports.generateSessionExirationDate = function (seconds) {
 
 module.exports.getConfiguration = function (callback) {
 
+  console.log('getconfiguration');
+
   pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 
-    client.query('SELECT * FROM configuration', function(error, result) { 
+    client.query('SELECT * FROM configuration', function(error, result) {
 
       done()
 
-      if (error){ 
+      if (error){
 
         callback(error)
 
@@ -27,42 +31,44 @@ module.exports.getConfiguration = function (callback) {
         if(result.rows.length != 0){
 
           callback(null, JSON.parse(result.rows[0].data))
-          
+
         } else {
 
           callback(new Error('configuration database is empty'))
 
         }
-        
+
       }
 
     })
 
   })
-  
+
 }
 
 exports.setConfiguration = function (configuration, callback) {
+
+  console.log('setconfiguratoin');
 
   var configurationAsString =  JSON.stringify(configuration, null, 4)
 
   pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 
     client.query("TRUNCATE configuration", function(error, result) {
-      
-      if (error){ 
+
+      if (error){
         return callback(error)
       }else{
 
         client.query("INSERT INTO configuration(data) values($1)", [configurationAsString], function(err, result) {
           done()
-          if (err){ 
+          if (err){
             callback(error)
           }else{
             callback(null)
           }
         })
-        
+
       }
     })
   })
