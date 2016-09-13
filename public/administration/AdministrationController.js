@@ -56,6 +56,8 @@ administrationController.controller('AdministrationController', function ($scope
 
         worker.channelsFriendlyName = '';
 
+          console.log('worker', worker);
+
         for (i = 0; i < worker.attributes.channels.length; i++) {
 
           worker.channelsFriendlyName += $scope.channels[worker.attributes.channels[i]];
@@ -65,7 +67,9 @@ administrationController.controller('AdministrationController', function ($scope
           }
 
         }    
-    
+
+          console.log('push', worker);
+
         $scope.workers.push(worker);
 
       });
