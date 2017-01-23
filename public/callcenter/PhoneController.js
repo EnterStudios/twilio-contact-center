@@ -125,15 +125,15 @@ $scope.$on('CallPhoneNumber', function(event, data) {
   $scope.phoneNumber = data.phoneNumber;
 
 
-  Twilio.Device.connect({'phone': data.phoneNumber});
+//  Twilio.Device.connect({'phone': data.phoneNumber});
   
-  // $http.get('/api/agents/call?phone='+ $scope.phoneNumber)
-  //
-  //     .then(function onSuccess(response) {
-  //
-  //      $log.log(response.data);
-  //
-  //     });
+  $http.get('/api/agents/call?phone='+ $scope.phoneNumber)
+
+      .then(function onSuccess(response) {
+
+       $log.log(response.data);
+
+      });
 
   $scope.state = 'isActive';
 

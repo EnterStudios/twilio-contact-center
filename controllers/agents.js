@@ -140,20 +140,28 @@ module.exports.call = function (req, res) {
 	var conferenceId = Math.floor((Math.random() * 1000000) + 1);
 
 	// here is new stuff i added for conference
-	var call = client.calls.create({
+	var callAgent = client.calls.create({
+		from: "+31858889347",
+		to: "client:fred",
+		url: "https://2067e366.ngrok.io/api/agents/join_conference?conferenceId=" + conferenceId
+	});
+
+	console.log('callAgent', callAgent);
+
+	var callCustomer = client.calls.create({
 		from: "+31858889347",
 		to: req.query.phone,
 		url: "https://2067e366.ngrok.io/api/agents/join_conference?conferenceId=" + conferenceId
 	});
 
-	console.log('call', call);
+	console.log('callCustomer', callCustomer);
 
 	// Now return TwiML to the caller to put them in the conference, using the
 	// same name.
 	twiml.dial(function(node) {
 		node.conference("" + conferenceId, {
 			waitUrl: "http://twimlets.com/holdmusic?Bucket=com.twilio.music.rock",
-			startConferenceOnEnter: false
+			startConferenceOnEnter: true
 		});
 	});
 //	res.set('Content-Type', 'text/xml');
