@@ -3,6 +3,8 @@ var async   = require('async')
 
 module.exports.createCallback = function (req, res) {
 
+	console.log('create callback');
+
 	var client = new twilio.TaskRouterClient(
 		process.env.TWILIO_ACCOUNT_ID,
 		process.env.TWILIO_AUTH_TOKEN,
@@ -34,6 +36,7 @@ module.exports.createChat = function (req, res) {
 				endpointId: req.body.endpoint
 			})
 
+			console.log('grnt', grant);
 			var accessToken = new twilio.AccessToken(
 				process.env.TWILIO_ACCOUNT_SID,
 				process.env.TWILIO_API_KEY,

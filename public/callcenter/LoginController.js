@@ -9,15 +9,19 @@ loginController.controller('LoginController', function ($scope, $http) {
 
   $scope.login = function(){
 
+    console.log('workflow login');
+
     var endpoint = navigator.userAgent.toLowerCase() + Math.floor((Math.random() * 1000) + 1);
 
     $http.post('/api/agents/login', { worker: $scope.worker, endpoint: endpoint })
 
       .then(function onSuccess(response) {
 
+        console.log('login response', response);
+
         window.location.replace('/callcenter/workplace.html');
-        
-      }, function onError(response) { 
+
+      }, function onError(response) {
 
         if(response.status == 404){
           $scope.loginForm.$setValidity('notFound', false);

@@ -73,6 +73,7 @@ router.route('/agents/login').post(agents.login)
 router.route('/agents/logout').post(agents.logout)
 router.route('/agents/session').get(agents.getSession)
 router.route('/agents/call').get(agents.call)
+router.route('/agents/join_conference').post(agents.joinConference)
 
 /* routes for IVR */
 var ivr = require('./controllers/ivr.js')

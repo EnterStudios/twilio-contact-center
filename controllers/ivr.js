@@ -4,6 +4,8 @@ module.exports.welcome = function (req, res) {
 
 	var twiml = new twilio.TwimlResponse()
 
+	console.log('welcome messsage');
+
 	twiml.gather({ action: 'select-team',
 		method: 'GET',
 		numDigits: 1,
@@ -19,6 +21,8 @@ module.exports.welcome = function (req, res) {
 }
 
 module.exports.selectTeam = function (req, res) {
+
+	console.log('select team');
 
 	var team = null
 
@@ -75,6 +79,8 @@ module.exports.selectTeam = function (req, res) {
 
 module.exports.createTask = function (req, res) {
 
+	console.log('create task');
+
 	var client = new twilio.TaskRouterClient(
 		process.env.TWILIO_ACCOUNT_SID,
 		process.env.TWILIO_AUTH_TOKEN,
@@ -115,6 +121,8 @@ module.exports.createTask = function (req, res) {
 }
 
 module.exports.assignment = function (req, res) {
+
+	console.log('assignment');
 
 	res.setHeader('Content-Type', 'application/json')
 	res.setHeader('Cache-Control', 'public, max-age=0')

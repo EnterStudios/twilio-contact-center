@@ -2,6 +2,9 @@ var twilio = require('twilio')
 
 module.exports.login = function (req, res) {
 
+
+	console.log('agents login');
+
 	var client = new twilio.TaskRouterClient(
 		process.env.TWILIO_ACCOUNT_SID,
 		process.env.TWILIO_AUTH_TOKEN,
@@ -42,6 +45,7 @@ module.exports.login = function (req, res) {
 					process.env.TWILIO_ACCOUNT_SID,
 					process.env.TWILIO_AUTH_TOKEN
 				)
+
 
 				phoneCapability.allowClientOutgoing(req.configuration.twilio.applicationSid)
 				phoneCapability.allowClientIncoming(friendlyName.toLowerCase())
@@ -99,6 +103,8 @@ module.exports.logout = function (req, res) {
 
 module.exports.getSession = function (req, res) {
 
+	console.log('agenst getSesssion');
+
 	if (!req.session.worker) {
 		res.status(403).end()
 	} else {
@@ -111,19 +117,72 @@ module.exports.getSession = function (req, res) {
 		})
 	}
 
-}
+};
 
 module.exports.call = function (req, res) {
+
+	var client = new twilio(
+		process.env.TWILIO_ACCOUNT_SID,
+		process.env.TWILIO_AUTH_TOKEN,
+		process.env.TWILIO_WORKSPACE_SID
+	);
+
+	console.log('call');
 
 	var twiml = new twilio.TwimlResponse();
 
 	console.log('trycalling', req.query.phone);
-	twiml.dial({ callerId: req.configuration.twilio.callerId }, function (node) {
-		node.number(req.query.phone)
-	})
+	// twiml.dial({ callerId: req.configuration.twilio.callerId }, function (node) {
+	// 	node.number(req.query.phone)
+	// })
 
-	res.setHeader('Content-Type', 'application/xml')
-	res.setHeader('Cache-Control', 'public, max-age=0')
-	res.send(twiml.toString())
 
-}
+	var conferenceId = Math.floor((Math.random() * 1000000) + 1);
+
+	// here is new stuff i added for conference
+	var call = client.calls.create({
+		from: "+31858889347",
+		to: req.query.phone,
+		url: "https://2067e366.ngrok.io/api/agents/join_conference?conferenceId=" + conferenceId
+	});
+
+	console.log('call', call);
+
+	// Now return TwiML to the caller to put them in the conference, using the
+	// same name.
+	twiml.dial(function(node) {
+		node.conference("" + conferenceId, {
+			waitUrl: "http://twimlets.com/holdmusic?Bucket=com.twilio.music.rock",
+			startConferenceOnEnter: false
+		});
+	});
+//	res.set('Content-Type', 'text/xml');
+	// conference stuff to heree
+
+	res.setHeader('Content-Type', 'application/xml');
+	res.setHeader('Cache-Control', 'public, max-age=0');
+	res.send(twiml.toString());
+
+};
+
+
+module.exports.joinConference = function (req, res) {
+
+	var twiml = new twilio.TwimlResponse();
+
+	// Now return TwiML to the caller to put them in the conference, using the
+	// same name.
+	twiml.dial(function(node) {
+		node.conference(req.query.conferenceId, {
+			startConferenceOnEnter: true
+		});
+
+	});
+//	res.set('Content-Type', 'text/xml');
+	// conference stuff to heree
+
+	res.setHeader('Content-Type', 'application/xml');
+	res.setHeader('Cache-Control', 'public, max-age=0');
+	res.send(twiml.toString());
+
+};

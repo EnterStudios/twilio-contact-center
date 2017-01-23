@@ -39,12 +39,16 @@ app.controller('WorkflowController', function ($scope, $rootScope, $http, $inter
   /* request configuration data and tokens from the backend */
   $scope.init = function () {
 
+    console.log('workflow init');
+
       $http.get('/api/agents/session')
 
       .then(function onSuccess(response) {
 
       /* keep a local copy of the configuration and the worker */
       $scope.configuration = response.data.configuration;
+
+        console.log('/api/agents/session response then init worker', response);
 
       /* initialize Twilio worker js with token received from the backend */
       $scope.initWorker(response.data.tokens.worker);
@@ -69,6 +73,8 @@ app.controller('WorkflowController', function ($scope, $rootScope, $http, $inter
   };
 
   $scope.initWorker = function(token) {
+
+    console.log('init worker with', token);
 
     /* create TaskRouter Worker */
     $scope.workerJS = new Twilio.TaskRouter.Worker(token, true, $scope.configuration.twilio.workerIdleActivitySid, $scope.configuration.twilio.workerOfflineActivitySid);
@@ -171,7 +177,7 @@ app.controller('WorkflowController', function ($scope, $rootScope, $http, $inter
 
     $log.log('accept reservation with TaskRouter Worker JavaScript SDK');
 
-    /* depending on the typ of taks that was created we handle the reservation differently */
+    /* depending on the typ of taks that was created we hanacceptdle the reservation differently */
     if(reservation.task.attributes.channel == 'chat'){
 
       reservation.accept(

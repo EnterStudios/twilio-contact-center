@@ -58,23 +58,23 @@ app.controller('SetupController', function ($scope, $http, $q) {
       });
 
   };
-  
+
   $scope.saveConfig = function(){
 
     $scope.isSaving = true;
 
     $http.post('/api/setup', { configuration: $scope.configuration })
-
       .then(function onSuccess(response) {
+        console.log('api setp post', response);
         $scope.isSaving = false;
-      }, function onError(response) { 
+      }, function onError(response) {
         $scope.isSaving = false;
         alert('Error: ' +  response.data.message);
       });
 
   };
 
-});  
+});
 
 app.directive('phoneNumber', function () {
 
